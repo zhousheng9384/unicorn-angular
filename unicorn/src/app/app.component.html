@@ -3,34 +3,87 @@
     <div class="logo"></div>
     <h2 style="color: white;">Angular Unicorns</h2>
   </nz-header>
-  <nz-content>
-    <nz-breadcrumb style="margin-left:10px;">
-      <nz-breadcrumb-item>Unicorns({{unicorns.length}})</nz-breadcrumb-item>
+  <nz-content style="width: 90%;margin: 0 auto;">
+    <nz-breadcrumb style="margin:10px;">
+      <nz-breadcrumb-item>
+        <h3>Unicorns({{unicornsOfDisplayData.length}})</h3>
+      </nz-breadcrumb-item>
     </nz-breadcrumb>
-    <nz-table #unicornsData [nzData]="unicorns">
-      <thead>
+    <nz-table #unicornsData [nzData]="unicornsOfDisplayData">
+      <thead (nzSortChange)="sort($event)" nzSingleSort>
         <tr>
-          <th>Name</th>
-          <th>Country</th>
-          <th>Last funding on</th>
-          <th>Total Fundings</th>
-          <th>Founded on</th>
-          <th>Category</th>
-          <th>GoTo</th>
+          <th width="25%"
+            nzShowSort 
+            nzSortKey="name">
+            Name
+            <i
+              class="ant-table-filter-icon"
+              nz-icon
+              nz-dropdown
+              #dropdown="nzDropdown"
+              nzType="search"
+              [nzDropdownMenu]="menu"
+              [class.ant-table-filter-open]="dropdown.nzVisible"
+              nzTrigger="click"
+              nzPlacement="bottomRight"
+              [nzClickHide]="false"
+              nzTableFilter
+            ></i>
+          </th>
+          <th width="10%"
+            nzShowSort
+            nzSortKey="country"
+            nzShowFilter
+            [nzFilters]="countryFilter"
+            (nzFilterChange)="filter($event)">
+            Country
+          </th>
+          <th width="10%"
+            nzShowSort 
+            nzSortKey="last_funding_on">
+            Last funding on
+          </th>
+          <th width="10%"
+            nzShowSort 
+            nzSortKey="total_equity_funding">
+            Total Fundings
+          </th>
+          <th width="10%"
+            nzShowSort 
+            nzSortKey="founded_on">
+            Founded on
+          </th>
+          <th width="25%"
+            nzShowSort 
+            nzSortKey="category">
+            Category
+          </th>
+          <th width="5%">Info</th>
+          <th width="5%">About</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let data of unicornsData.data">
-          <td>{{data.name}}</td>
+          <td><img src="{{data.logo_url}}"/>{{data.name}}</td>
           <td>{{data.country}}</td>
           <td>{{data.last_funding_on}}</td>
           <td>{{data.total_equity_funding}}</td>
           <td>{{data.founded_on}}</td>
           <td>{{data.category}}</td>
-          <td><a href="{{data.permalink}}" target="_blank">Goto</a></td>
+          <td><a href="{{data.permalink}}" target="_blank">Info</a></td>
+          <td><a href="{{data.tag_page}}" target="_blank">About</a></td>
         </tr>
       </tbody>
     </nz-table>
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+      <div class="search-box">
+        <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
+        <button nz-button nzSize="small" nzType="primary" (click)="search()" class="search-button">
+          Search
+        </button>
+        <button nz-button nzSize="small" (click)="resetName()">Reset</button>
+      </div>
+    </nz-dropdown-menu>
   </nz-content>
   <nz-footer></nz-footer>
 </nz-layout>
